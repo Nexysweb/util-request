@@ -9,11 +9,11 @@ class RequestService {
 
   // standard HTTP methods
   get = (uri) => {
-    return this.axios.get(uri);
+    return this.axios.get(uri).then(x => x.data);
   }
 
   post = (uri, data, auth) => {
-    return this.axios.post(uri, data, { auth });
+    return this.axios.post(uri, data, { auth }).then(x => x.data);
   }
 }
 

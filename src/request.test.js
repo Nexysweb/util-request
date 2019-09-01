@@ -9,7 +9,7 @@ test('get request', async () => {
 
   const args = {foo1: 'bar1', foo2: 'bar2'}
 
-  expect(t.data.args).toEqual(args);
+  expect(t.args).toEqual(args);
 })
 
 test('post request', async () => {
@@ -21,5 +21,5 @@ test('post request', async () => {
 
   const t = await Request.post(url, data);
 
-  expect(t.data.json.args).toEqual(data.args)
+  expect(t.json.args).toEqual(data.args)
 })
