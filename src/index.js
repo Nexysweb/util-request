@@ -6,6 +6,11 @@ import debounce from 'debounce-promise';
 
 import Polyglot from 'node-polyglot';
 
+// global variable to be set
+const dirpath = process.env.I18N_DIRPATH || '../../../locales';
+const urlInsert = process.env.I18N_URL_INSERT || '/product/i18n/insert';
+
+// todo add client (separate packages apirequest?)
 const HTTPClient = {
   get: async () => null,
   post: async () => null
@@ -45,6 +50,7 @@ export const getBrowserLanguage = () => {
   return null;
 }
 
+// maps iso code to IBM codes
 const codeMap = {
   "ENG": "ENU",
   "FRA": "FRA",
@@ -80,7 +86,7 @@ const insertKeys = tuples => {
   const args = [...processArgTuples(tuples)];
   const inserts = args.map(async (key) => {
     try {
-      return await HTTPClient.post('/product/i18n/insert', { key })
+      return await HTTPClient.post(urlInsert, { key })
     } catch (err) {
       return err.toString();
     }
@@ -118,7 +124,6 @@ class I18n {
   }
   
   initLocale(locale) {
-    const dirpath = process.env.I18N_DIRPATH || '../../../locales';
     const phrases = require(`${dirpath}/${locale}.json`);
     const polyglot = new Polyglot({ locale, phrases });
     this.translator = polyglot.t.bind(polyglot);
