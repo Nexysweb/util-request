@@ -6,16 +6,11 @@ import debounce from 'debounce-promise';
 
 import Polyglot from 'node-polyglot';
 
+import HTTPClient from './request';
+
 // global variable to be set
 const dirpath = process.env.I18N_DIRPATH || '../../../locales';
 const urlInsert = process.env.I18N_URL_INSERT || '/product/i18n/insert';
-
-// todo add client (separate packages apirequest?)
-const HTTPClient = {
-  get: async () => null,
-  post: async () => null
-}
-
 
 // NOTE: handle en-US
 const getLanguage = code => {

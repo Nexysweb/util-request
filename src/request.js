@@ -1,3 +1,5 @@
+// todo rework and have in a separate package
+
 import axios from 'axios';
 
 // TODO: wrap fetch https://devhints.io/js-fetch
