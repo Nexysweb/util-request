@@ -74,3 +74,5 @@ export const fetch = (url, data = null) => {
 
   return post(url, data);
 }
+
+export default { response, get, post, fetch };
