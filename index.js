@@ -1,3 +1,4 @@
-'use strict';
+import I18n from './dist/i18n';
+import Request from './dist/request';
 
-module.exports = require('./dist/index.js');
+export default { I18n, Request };

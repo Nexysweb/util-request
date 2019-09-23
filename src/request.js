@@ -1,23 +1,69 @@
-// todo rework and have in a separate package
-
+// https://kapeli.com/cheat_sheets/Axios.docset/Contents/Resources/Documents/index
+// todo: link with toast and redux
 import axios from 'axios';
 
-// TODO: wrap fetch https://devhints.io/js-fetch
-// TODO: rename to Request(Service)
-class RequestService {
-  constructor() {
-    this.axios = axios.create();
-  }
+/**
+ * wrapper around main axios functin (in case we decide to change the library)
+ * @param  {[type]} options [description]
+ * @return {[type]}         [description]
+ */
+export const response = options => axios(options);
 
-  // standard HTTP methods
-  get = (uri) => {
-    return this.axios.get(uri, {withCredentials: true}).then(x => x.data);
-  }
+// default parameters 
+const withCredentials = true;
+const responseType = 'json';
 
-  post = (uri, data, auth) => {
-    return this.axios.post(uri, data, { auth }, {withCredentials: true}).then(x => x.data);
-  }
+const defaultParameters = {
+  withCredentials, responseType
 }
 
-const RequestSingleton = new RequestService();
-export default RequestSingleton;
+/**
+ * get request
+ * @param  {[type]} url [description]
+ * @return {[type]}     [description]
+ */
+export const get = url => {
+  const method = 'get';
+
+  const options = {
+    method,
+    url,
+    ...defaultParameters
+  };
+
+  return response(options).then(x => x.data);
+}
+
+/**
+ * post request
+ * @param  {[type]} url  [description]
+ * @param  {[type]} data [description]
+ * @return {[type]}      [description]
+ */
+export const post = (url, data) => {
+  const method = 'post';
+
+  const options = {
+    method,
+    url,
+    data,
+    ...defaultParameters
+  };
+
+  return response(options).then(x => x.data);
+}
+
+/**
+ * get/post request depending on whether `data` is available
+ * @param  {[type]} url  [description]
+ * @param  {[type]} data [description]
+ * @return {[type]}      [description]
+ */
+export const fetch = (url, data = null) => {
+  if (data === null || !data) {
+    // get request
+    return get(url);
+  }
+
+  return post(url, data);
+}
