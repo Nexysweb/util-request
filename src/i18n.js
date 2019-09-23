@@ -1,12 +1,6 @@
-import React, { Component, Children } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-
-import debounce from 'debounce-promise';
-
 import Polyglot from 'node-polyglot';
 
-import HTTPClient from './request';
+import Request from './request';
 
 // global variable to be set
 const dirpath = process.env.I18N_DIRPATH || '../../../locales';
@@ -45,43 +39,12 @@ export const getBrowserLanguage = () => {
   return null;
 }
 
-// maps iso code to IBM codes
-const codeMap = {
-  "ENG": "ENU",
-  "FRA": "FRA",
-  "DEU": "DEU",
-  "ITA": "ITA",
-  "SPA": "ESP",
-  "RUS": "RUS",
-  "POR": "PTG",
-  "JPN": "JPN",
-  "ZHO": "CHS",
-  "KOR": "KOR",
-  "IND": "IND"
-};
-
-export const getIBMCode = (id, languages) => {
-  const language = languages.find(item => item.id === id);
-  if (language && language.iso3) return codeMap[language.iso3.toUpperCase()];
-  else return '';
-}
-
-// TODO: call properNames
-export const originalNames = arr => {
- return arr.map(l => ({id: l.id, name: l.originalName}));
-}
-
-export const translateNames = arr => {
-  return arr.map(l => ({...l, name: i18nSingleton.translate(`lang.${l.name}`)})); 
-}
-
-const processArgTuples = tuples => new Set(tuples.flat());
-
 const insertKeys = tuples => {
+  const sets = new Set(tuples.flat());
   const args = [...processArgTuples(tuples)];
   const inserts = args.map(async (key) => {
     try {
-      return await HTTPClient.post(urlInsert, { key })
+      return await Request.post(urlInsert, { key })
     } catch (err) {
       return err.toString();
     }
@@ -89,7 +52,7 @@ const insertKeys = tuples => {
   return Promise.all(inserts);
 }
 
-const insertKey = debounce(insertKeys, 2000, {accumulate: true});
+//const insertKey = debounce(insertKeys, 2000, {accumulate: true});
 
 const onMissingKey = (key, options, locale) => {
   // IDEA: use locale to insert, { key, (productId), values = [{ langID: locale, name: Please translate me }]
@@ -128,7 +91,7 @@ class I18n {
   async fetchTranslations(locale) {
     let result = null;
     if (this.isDev) {
-      result = await HTTPClient.get(`/i18n/${locale}/dev`);
+      result = await Request.get(`/i18n/${locale}/dev`);
     } else {
       const currentTranslator = this.translators[locale];
       if (currentTranslator) {
@@ -136,7 +99,7 @@ class I18n {
         return;
       }
       
-      result = await HTTPClient.get(`/i18n/${locale}/serve`);
+      result = await Request.get(`/i18n/${locale}/serve`);
     }
 
     const phrases = result.data;
@@ -172,33 +135,4 @@ class I18n {
   }
 }
 
-const i18nSingleton = new I18n();
-export default i18nSingleton;
-
-
-export class I18nProvider extends Component {
-  getChildContext() {
-    // phrases: require('../../../locales/en.json')
-    const { locale = 'en', phrases = {}} = this.props;
-    const polyglot = new Polyglot({ locale, phrases });
-
-    const translate = polyglot.t.bind(polyglot);
-    // NOTE: The bind() method creates a new function that, when called, has its this keyword set to the provided value,
-    // with a given sequence of arguments preceding any provided when the new function is called
-    return { locale, translate };
-  }
-
-  render() {
-    return Children.only(this.props.children); 
-    // NOTE: Verifies that children has only one child (a React element) and returns it.
-    // Otherwise this method throws an error.
-  }
-}
-
-I18nProvider.childContextTypes = {
-  locale: PropTypes.string.isRequired,
-  translate: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = state => state.locale;
-export const ConnectedI18nProvider = connect(mapStateToProps, null)(I18nProvider);
+export default new I18n();
