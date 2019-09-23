@@ -31,7 +31,7 @@ export const get = url => {
     ...defaultParameters
   };
 
-  return response(options).then(x => x.data);
+  return response(options).then( formatOutput );
 }
 
 /**
@@ -50,7 +50,14 @@ export const post = (url, data) => {
     ...defaultParameters
   };
 
-  return response(options).then(x => x.data);
+  return response(options).then( formatOutput );
+}
+
+const formatOutput = x => {
+  return {
+    status: x.status,
+    data: x.data
+  };
 }
 
 /**

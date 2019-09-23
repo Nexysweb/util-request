@@ -42,7 +42,8 @@ test('get response', async () => {
 
   const r = await response(options);
 
-  expect(r.data.args).toEqual(args)
+  expect(r.data.args).toEqual(args);
+  expect(r.status).toEqual(200);
 });
 
 test('get response 2', async () => {
@@ -52,7 +53,8 @@ test('get response 2', async () => {
 
   const r = await get(url);
 
-  expect(r.args).toEqual(args)
+  expect(r.data.args).toEqual(args);
+  expect(r.status).toEqual(200);
 });
 
 test('post response', async () => {
@@ -70,7 +72,8 @@ test('post response', async () => {
 
   const r = await response(options);
 
-  expect(r.data.data.args).toEqual(args)
+  expect(r.data.data.args).toEqual(args);
+  expect(r.status).toEqual(200);
 });
 
 test('post response 2', async () => {
@@ -81,7 +84,8 @@ test('post response 2', async () => {
 
   const r = await post(url, data);
 
-  expect(r.data).toEqual(data)
+  expect(r.data.data).toEqual(data);
+  expect(r.status).toEqual(200);
 });
 
 test('get response with fetch', async () => {
@@ -91,7 +95,8 @@ test('get response with fetch', async () => {
 
   const r = await fetch(url);
 
-  expect(r.args).toEqual(args)
+  expect(r.data.args).toEqual(args);
+  expect(r.status).toEqual(200);
 });
 
 test('post response with fetch', async () => {
@@ -102,5 +107,6 @@ test('post response with fetch', async () => {
 
   const r = await fetch(url, data);
 
-  expect(r.data).toEqual(data)
+  expect(r.data.data).toEqual(data);
+  expect(r.status).toEqual(200);
 });
