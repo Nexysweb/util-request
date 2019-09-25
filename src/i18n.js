@@ -4,7 +4,7 @@ import Request from './request';
 
 // global variable to be set
 const localeDefault = process.env.I18N_LOCALE_DEFAULT || 'en';
-const urlFetch = process.env.I18N_URL_FETCH ? process.env.I18N_URL_FETCH.replace('${locale}', localeDefault) : `/i18n/${localeDefault}/serve`;
+const urlFetch = process.env.I18N_URL_FETCH ? process.env.I18N_URL_FETCH.replace('${locale}', localeDefault) : `/i18n/${localeDefault}/dev`;
 const urlInsert = process.env.I18N_URL_INSERT || '/product/i18n/insert';
 
 // NOTE: handle en-US
@@ -65,6 +65,8 @@ const onMissingKey = (key, options, locale) => {
 }
 
 class I18n {
+  wasInit = false;
+
   init() {
     return Request.get(urlFetch).then(res => {
       const polyglot = new Polyglot({phrases: res.data});
