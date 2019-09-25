@@ -66,7 +66,7 @@ const onMissingKey = (key, options, locale) => {
 
 class I18n {
   init() {
-    return Request.get(url).then(res => {
+    return Request.get(urlFetch).then(res => {
       const polyglot = new Polyglot({phrases: res.data});
       this.translator = polyglot.t.bind(polyglot);
     });
