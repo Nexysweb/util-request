@@ -3,7 +3,8 @@ import Polyglot from 'node-polyglot';
 import Request from './request';
 
 // global variable to be set
-const dirpath = process.env.I18N_DIRPATH || '../../../locales';
+const localeDefault = process.env.I18N_LOCALE_DEFAULT || 'en';
+const urlFetch = process.env.I18N_URL_FETCH ? process.env.I18N_URL_FETCH.replace('${locale}', localeDefault) : `/i18n/${localeDefault}/serve`;
 const urlInsert = process.env.I18N_URL_INSERT || '/product/i18n/insert';
 
 // NOTE: handle en-US
@@ -64,74 +65,22 @@ const onMissingKey = (key, options, locale) => {
 }
 
 class I18n {
-  constructor() {
-    this.fetchTranslations = this.fetchTranslations.bind(this);
-    this.translators = {};
-    this.translator = null;
-
-    if (process.env.STORYBOOK_GIT_ORIGIN) {
-      this.initLocale('en');
-    } else {
-      // NOTE: check if in development mode
-      this.isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
-      if (!this.isDev) {
-        // NOTE: fetch english translations for base translator
-        this.fetchTranslations('en');
-      }
-    }
-  }
-  
-  initLocale(locale) {
-    const phrases = require(`${dirpath}/${locale}.json`);
-    const polyglot = new Polyglot({ locale, phrases });
-    this.translator = polyglot.t.bind(polyglot);
-    this.translators[locale] = this.translator;
+  init() {
+    return Request.get(url).then(res => {
+      const polyglot = new Polyglot({phrases: res.data});
+      this.translator = polyglot.t.bind(polyglot);
+    });
   }
 
-  async fetchTranslations(locale) {
-    let result = null;
-    if (this.isDev) {
-      result = await Request.get(`/i18n/${locale}/dev`);
-    } else {
-      const currentTranslator = this.translators[locale];
-      if (currentTranslator) {
-        this.translator = currentTranslator;
-        return;
-      }
-      
-      result = await Request.get(`/i18n/${locale}/serve`);
-    }
-
-    const phrases = result.data;
-    const polyglot = new Polyglot({ locale, phrases, allowMissing: !this.isDev, onMissingKey });
-    // NOTE: https://github.com/airbnb/polyglot.js#options-overview
-    this.translator = polyglot.t.bind(polyglot);
-    this.translators[locale] = this.translator;
-  }
-
-  async changeLocale(locale) {
-    try {
-      await this.fetchTranslations(locale);
-      this.locale = locale;
-    } catch(e) { console.log('Could not change locale due to', e); }
-  }
-
-  translate(path, vars=null, tooltip=false) {
-    if (!path) return null;
-    if (!this.translator) return path; // <span><Loader thickness={1} radius={10} className="inline-block" /> Loading translation..</span>;
-    // alternative: this.translator.has(path) ?
-    let translation = this.translator(path);
-    if (vars) translation = this.translator(path, vars);
-
-    if (!this.isDev) {
-      // NOTE: in production mode, translate untranslated keys to english
-      if (translation === path && this.locale != 'en') {
-        translation = this.translators['en'](path);
-        if (vars) translation = this.translators['en'](path, vars);
-      }
-    }
-
-    return translation;
+  /**
+   * finds the translation for the given key
+   * @param  key: key to be translated
+   * @return translattion associated with `key`
+   */
+  translate(key) {
+    if (!key) return null;
+    if (!this.translator) return key;
+    return this.translator(key);
   }
 }
 
