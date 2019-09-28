@@ -111,11 +111,16 @@ test('post 400 response with fetch', async () => {
   await Promise.all(ss.map(async status => {
     const url = host + '/status/' + status;
 
-    const r = await fetch(url, null);
+    try {
+      const r = await fetch(url, null);
+      expect(true).toEqual(false)
+    } catch (err) {
+      console.log(err);
 
-    expect(r.data).toEqual({status});
-    expect(r.status).toEqual(status);
-    console.log(r.status + ' ' + status)
+      expect(err.data).toEqual({status});
+      expect(err.status).toEqual(status);
+      console.log(err.status + ' ' + status)
+    }
   }));
 });
 

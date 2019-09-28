@@ -55,12 +55,10 @@ export const post = (url, data) => {
 
 const formatSuccess = x => x.data;
 
-const formatError = x => {
-  return {
-    status: x.response.status,
-    data: x.response.data
-  };
-}
+const formatError = x => Promise.reject({
+  status: x.response.status,
+  data: x.response.data
+});
 
 /**
  * get/post request depending on whether `data` is available
