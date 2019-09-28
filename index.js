@@ -19,6 +19,6 @@ var _store = (require("./dist/store"));
 var _default = {
   I18n: _i18n["default"],
   Request: _request["default"],
-  Store: _request["store"]
+  Store: _store["store"]
 };
 exports["default"] = _default;
