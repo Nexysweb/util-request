@@ -9,8 +9,8 @@
     "store": "^2.0.12"
   },
   "scripts": {
-    "test": "rimraf dist/ && jest ",
-    "build": "rimraf dist/ && babel src/ --out-dir dist/;"
+    "test": "jest ",
+    "build": "rimraf dist/ && babel src/ --out-dir dist/; rm dist/*.test.js;babel pindex.js --out-file index.js"
   },
   "files": [
     "index.js",
