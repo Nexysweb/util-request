@@ -31,7 +31,7 @@ export const get = url => {
     ...defaultParameters
   };
 
-  return response(options).then( formatOutput );
+  return response(options).then( formatSuccess, formatError );
 }
 
 /**
@@ -50,13 +50,15 @@ export const post = (url, data) => {
     ...defaultParameters
   };
 
-  return response(options).then( formatOutput );
+  return response(options).then( formatSuccess, formatError );
 }
 
-const formatOutput = x => {
+const formatSuccess = x => x.data;
+
+const formatError = x => {
   return {
-    status: x.status,
-    data: x.data
+    status: x.response.status,
+    data: x.response.data
   };
 }
 
