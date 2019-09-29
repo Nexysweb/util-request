@@ -13,10 +13,13 @@ var _request = _interopRequireDefault(require("./dist/request"));
 
 var _store = _interopRequireDefault(require("./dist/store"));
 
+var _utils = _interopRequireDefault(require("./dist/utils"));
+
 var _default = {
   I18n: _i18n["default"],
   Request: _request["default"],
-  Store: _store["default"]
+  Store: _store["default"],
+  Utils: _utils["default"]
 };
 /*
 "use strict";

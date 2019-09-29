@@ -3,7 +3,7 @@ import Request from './dist/request';
 import Store from './dist/store';
 import Utils from './dist/utils';
 
-export default { I18n, Request, Store };
+export default { I18n, Request, Store, Utils };
 
 
 /*
