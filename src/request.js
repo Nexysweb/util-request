@@ -75,4 +75,37 @@ export const fetch = (url, data = null) => {
   return post(url, data);
 }
 
-export default { response, get, post, fetch };
+export const mapStatusToMessage = status => {
+  switch (status) {
+    case 200:
+    case 201:
+      return 'growlAlert.text.save.success'
+    case 404:
+      return 'growl.notFound.danger'
+    case 401:
+    case 403:
+      return 'growl.unauthorized.danger'
+    case 400:
+      return null;
+    break;
+    default:
+      return 'growl.serverError.danger';
+
+  }
+}
+
+export const fetchWithNotifications = (url, data = null) => {
+  return fetch(url, data).then(data => {
+    const message = mapStatusToMessage(200);
+
+    return {data, message};
+  }, error => {
+    const { status, data } = error;
+
+    const message = mapStatusToMessage(status);
+
+    return { status, data, message };
+  })
+}
+
+export default { response, get, post, fetch, fetchWithNotifications };

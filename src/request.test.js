@@ -1,5 +1,5 @@
 import Request from './request';
-import { response, get, post, fetch } from './request';
+import { response, get, post, fetch,fetchWithNotifications, mapStatusToMessage } from './request';
 
 const host = 'https://postman-echo.com';
 
@@ -105,22 +105,17 @@ test('post response with fetch', async () => {
   expect(r.data).toEqual(data);
 });
 
-test('post 400 response with fetch', async () => {
-  const ss = [400, 401, 403, 404, 500];
+test('map status to message', () => {
+  expect(mapStatusToMessage(500)).toEqual('growl.serverError.danger');
+})
 
-  await Promise.all(ss.map(async status => {
-    const url = host + '/status/' + status;
+test('get response with fetch with notifications', async () => {
+  const url = host + '/get?foo1=bar1&foo2=bar2';
+  const args = {foo1: 'bar1', foo2: 'bar2'}
 
-    try {
-      const r = await fetch(url, null);
-      expect(true).toEqual(false)
-    } catch (err) {
-      console.log(err);
+  const r = await fetchWithNotifications(url);
 
-      expect(err.data).toEqual({status});
-      expect(err.status).toEqual(status);
-      console.log(err.status + ' ' + status)
-    }
-  }));
+  expect(r.data.args).toEqual(args);
+  expect(r.message).toEqual('growlAlert.text.save.success')
 });
 
