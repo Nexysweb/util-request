@@ -6,6 +6,14 @@ const profileKey = 'profile';
 const permissionsKey = 'permissions';
 const localeKey = 'locale';
 
+/**
+ * [description]
+ * @param  {[type]} token       [description]
+ * @param  {[type]} profile     [description]
+ * @param  {[type]} permissions: e.g ['permission1', 'permission2', 'permission3'] ...
+ * @param  {[type]} locale      [description]
+ * @return {[type]}             [description]
+ */
 export const set = (token, profile, permissions, locale) => {
   Cookies.set(authKey, { token });
   Store.set(profileKey, profile);
