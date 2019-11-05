@@ -4,7 +4,7 @@ import Request from './request';
 
 // global variable to be set
 const localeDefault = process.env.I18N_LOCALE_DEFAULT || 'en';
-const urlFetch = process.env.I18N_URL_FETCH ? process.env.I18N_URL_FETCH.replace('${locale}', localeDefault) : `/i18n/${localeDefault}/dev`;
+const urlFetch = process.env.I18N_URL_FETCH ? process.env.I18N_URL_FETCH.replace('${locale}', localeDefault) : `/i18n/${localeDefault}/serve`;
 const urlInsert = process.env.I18N_URL_INSERT || '/product/i18n/insert';
 
 // NOTE: handle en-US
