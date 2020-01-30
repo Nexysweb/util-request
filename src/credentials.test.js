@@ -18,6 +18,5 @@ test('remove credentials', () => {
   Credentials.remove(token, profile, permissions, locale);
 
   expect(Credentials.getProfile()).toEqual(undefined);
-  expect(Credentials.getToken()).toEqual(undefined);
   expect(Credentials.isDefined()).toEqual(false);
 });
