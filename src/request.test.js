@@ -123,3 +123,14 @@ test('get response with fetch with notifications', async () => {
   expect(r.message).toEqual('growlAlert.text.save.success')
 });
 
+test('get response 400 with notification', async () => {
+  const url = host + '/status/400?foo1=bar1&foo2=bar2';
+  const args = {foo1: 'bar1', foo2: 'bar2'}
+
+  const r = await fetchWithNotifications(url)
+
+  console.log(JSON.stringify(r))
+  
+  expect(r.data).toEqual({"status":400});
+  expect(r.message).toEqual(null)
+});
