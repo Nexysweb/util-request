@@ -7,7 +7,7 @@ import { response, get, post, fetch,fetchWithNotifications, mapStatusToMessage }
 
 const host = 'https://postman-echo.com';
 
-/*
+
 test('get request', async () => {
   const url = host + '/get?foo1=bar1&foo2=bar2';
 
@@ -16,7 +16,7 @@ test('get request', async () => {
   const args = {foo1: 'bar1', foo2: 'bar2'}
 
   expect(t.args).toEqual(args);
-})
+});
 
 test('post request', async () => {
   const url = host + '/post';
@@ -28,9 +28,7 @@ test('post request', async () => {
   const t = await Request.post(url, data);
 
   expect(t.json.args).toEqual(data.args)
-})*/
-
-
+});
 
 test('get response (general)', async () => {
   const method = 'get';
