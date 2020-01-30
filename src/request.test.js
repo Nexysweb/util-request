@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+// @see https://github.com/axios/axios/issues/1754
 import Request from './request';
 import { response, get, post, fetch,fetchWithNotifications, mapStatusToMessage } from './request';
 
