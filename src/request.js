@@ -95,7 +95,7 @@ export const mapStatusToMessage = status => {
 }
 
 export const fetchWithNotifications = (url, data = null) => {
-  return Request.fetch(url, data).then(data => Promise.resolve(data),
+  return fetch(url, data).then(data => Promise.resolve(data),
     errors => Promise.reject({
       status: errors.status,
       data: errors.data,
