@@ -95,17 +95,17 @@ export const mapStatusToMessage = status => {
 }
 
 export const fetchWithNotifications = (url, data = null) => {
-  return fetch(url, data).then(data => {
-    const message = mapStatusToMessage(200);
-
-    return {data, message};
-  }, error => {
-    const { status, data } = error;
-
-    const message = mapStatusToMessage(status);
-
-    return { status, data, message };
-  })
+  return fetch(url, data).then(
+    data => Promise.resolve({
+      data,
+      message: mapStatusToMessage(200)
+    }),
+    errors => Promise.reject({
+      status: errors.status,
+      data: errors.data,
+      message: mapStatusToMessage(errors.status)
+    })
+  );
 }
 
 export default { response, get, post, fetch, fetchWithNotifications };

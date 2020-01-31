@@ -123,10 +123,13 @@ test('get response with fetch with notifications', async () => {
 
 test('get response 400 with notification', async () => {
   const url = host + '/status/400?foo1=bar1&foo2=bar2';
-  const args = {foo1: 'bar1', foo2: 'bar2'}
+  const args = {foo1: 'bar1', foo2: 'bar2'};
 
-  const r = await fetchWithNotifications(url);
-  
-  expect(r.data).toEqual({"status":400});
-  expect(r.message).toEqual(null)
+  const r = {status: 400, data: {status:400}, message: null};
+
+  try{
+    await fetchWithNotifications(url);
+  } catch (e) {
+    expect(r).toEqual(e)
+  }
 });
